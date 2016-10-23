@@ -8,14 +8,18 @@ app.cell = function Cell(){
 }
 
 app.map = function Map(){
-  let currentMap = []
-  this.generateMap = function(){
+  let currentMap=[];
+
+  this.generateMap = function(random){
+    currentMap =[];
     for (var i = 0; i < 100; i++) {
       currentMap.push([])
       for (var j = 0; j < 100; j++) {
         let newCell = new app.cell()
-        if(Math.floor(Math.random()*2)<1){
-          newCell.status = true;
+        if (random) {
+          if(Math.floor(Math.random()*2)<1){
+            newCell.status = true;
+          }
         }
         newCell.x = j;
         newCell.y = i;
@@ -41,7 +45,7 @@ app.run = function(num){
   }
   return iteration
 }
-app.newState = function(arr){
+app.checkNeighbors = function(arr){
   let newState = []
   for (var i = 0; i < arr.length; i++) {
     newState.push([])
@@ -142,15 +146,17 @@ app.checkStatus = function(map){
   }
 }
 
-function runIt(){
+function populate(){
   main.innerHTML =""
-  app.newState(currentMap)
-  app.checkStatus(currentMap)
   for (var i = 0; i < currentMap.length; i++) {
     var row = document.createElement('div')
     row.setAttribute('class', 'row')
     for (var j = 0; j < currentMap[i].length; j++) {
       var div = document.createElement('div')
+      div.onclick = function(){
+        resetMap(this.id)
+      }
+      div.setAttribute('id', i+'.'+j)
       if(currentMap[i][j].status){
         div.style.backgroundColor = "blue"
       }
@@ -161,18 +167,51 @@ function runIt(){
   }
 }
 
+function resetMap(id){
+  var arr = id.split('.')
+  var i = arr[0]
+  var j = arr[1]
+  console.log(currentMap[i][j].status);
 
+  currentMap[i][j].status = !currentMap[i][j].status
+  console.log(currentMap[i][j].status);
+  populate()
+}
+
+function iterate(){
+  app.checkNeighbors(currentMap)
+  app.checkStatus(currentMap)
+  populate()
+}
 
 var main = document.getElementById('main')
-var button = document.getElementById('startButton')
+var randomButton = document.getElementById('randomButton')
+var startButton = document.getElementById('startButton')
+var generateButton = document.getElementById('generateButton')
+var stopButton = document.getElementById('stopButton')
 var text = document.createElement('h1')
 
 var map = new app.map()
-map.generateMap()
 var currentMap = map.getMap()
-button.onclick = function(){
-  console.log("hit");
-  window.setInterval(runIt,250)
+
+var nIntervId;
+
+randomButton.onclick = function(){
+  map.generateMap(true)
+  currentMap = map.getMap()
+  nIntervId = setInterval(iterate,250)
+}
+stopButton.onclick = function(){
+   clearInterval(nIntervId);
+}
+startButton.onclick = function(){
+  nIntervId = setInterval(iterate,250)
+}
+generateButton.onclick = function(){
+  clearInterval(nIntervId);
+  map.generateMap()
+  currentMap = map.getMap()
+  populate()
 }
 
 
