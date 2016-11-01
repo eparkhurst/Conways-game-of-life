@@ -196,16 +196,20 @@ var currentMap = map.getMap()
 
 var nIntervId;
 
+function go(){
+  nIntervId = setInterval(iterate,250)
+}
+
 randomButton.onclick = function(){
   map.generateMap(true)
   currentMap = map.getMap()
-  nIntervId = setInterval(iterate,250)
+  go()
 }
 stopButton.onclick = function(){
    clearInterval(nIntervId);
 }
 startButton.onclick = function(){
-  nIntervId = setInterval(iterate,250)
+  go()
 }
 generateButton.onclick = function(){
   clearInterval(nIntervId);
