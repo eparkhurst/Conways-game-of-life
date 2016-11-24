@@ -34,7 +34,6 @@ app.map = function Map(){
 
 app.run = function(num){
   let iteration = 0;
-  var map = new app.map()
   map.generateMap()
   var currentMap = map.getMap()
 
@@ -51,81 +50,25 @@ app.checkNeighbors = function(arr){
     newState.push([])
     for (var j = 0; j < arr[i].length; j++) {
       arr[i][j].livingNeighbors = 0
-      checkRight(arr[i][j], arr)
-      checkLeft(arr[i][j], arr)
-      checkTop(arr[i][j], arr)
-      checkBottom(arr[i][j], arr)
-      checkTopLeft(arr[i][j], arr)
-      checkTopRight(arr[i][j], arr)
-      checkBottomRight(arr[i][j], arr)
-      checkBottomLeft(arr[i][j], arr)
+      check(arr[i][j], arr,0,1)
+      check(arr[i][j], arr,0,-1)
+      check(arr[i][j], arr,1,1)
+      check(arr[i][j], arr,1,-1)
+      check(arr[i][j], arr,1,0)
+      check(arr[i][j], arr,-1,0)
+      check(arr[i][j], arr,-1,-1)
+      check(arr[i][j], arr,-1,1)
     }
   }
   return arr
 }
 
-function checkRight(cell,map){
+function check(cell,map,xChange,yChange){
   var x = cell.x
   var y = cell.y
-  if(map[y][x+1]){
-    if(map[y][x+1].status === true)
-    cell.livingNeighbors +=1
-  }
-}
-function checkLeft(cell,map){
-  var x = cell.x
-  var y = cell.y
-  if(map[y][x-1]){
-    if(map[y][x-1].status === true)
-    cell.livingNeighbors +=1
-  }
-}
-function checkTop(cell,map){
-  var x = cell.x
-  var y = cell.y
-  if(map[y-1]){
-    if(map[y-1][x].status === true)
-    cell.livingNeighbors +=1
-  }
-}
-function checkBottom(cell,map){
-  var x = cell.x
-  var y = cell.y
-  if(map[y+1]){
-    if(map[y+1][x].status === true)
-    cell.livingNeighbors +=1
-  }
-}
-function checkTopLeft(cell,map){
-  var x = cell.x
-  var y = cell.y
-  if(map[y-1] &&map[y-1][x-1]){
-    if(map[y-1][x-1].status === true)
-    cell.livingNeighbors +=1
-  }
-}
-function checkTopRight(cell,map){
-  var x = cell.x
-  var y = cell.y
-  if(map[y-1] &&map[y-1][x+1]){
-    if(map[y-1][x+1].status === true)
-    cell.livingNeighbors +=1
-  }
-}
-function checkBottomLeft(cell,map){
-  var x = cell.x
-  var y = cell.y
-  if(map[y+1] &&map[y+1][x-1]){
-    if(map[y+1][x-1].status === true)
-    cell.livingNeighbors +=1
-  }
-}
-function checkBottomRight(cell,map){
-  var x = cell.x
-  var y = cell.y
-  if(map[y+1] &&map[y+1][x+1]){
-    if(map[y+1][x+1].status === true)
-    cell.livingNeighbors +=1
+  if(map[y+yChange] && map[y+yChange][x+xChange]){
+    if(map[y+yChange][x+xChange].status === true)
+    cell.livingNeighbors += 1
   }
 }
 

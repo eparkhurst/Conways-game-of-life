@@ -1,8 +1,8 @@
 
 #main{
   border: 1px solid black;
-  width:60vw;
-  height: 60vw;
+  width:600px;
+  height: 600px;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -12,8 +12,8 @@
   flex-direction: row;
 }
 .inner{
-  width:.6vw;
-  height:.6vw;
+  width:6px;
+  height:6px;
 }
 .om{
   background-color: black;
