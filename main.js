@@ -32,22 +32,9 @@ app.map = function Map(){
   }
 }
 
-app.run = function(num){
-  let iteration = 0;
-  map.generateMap()
-  var currentMap = map.getMap()
 
-  for (var i = 0; i < num; i++) {
-    app.newState(currentMap)
-    app.checkStatus(currentMap)
-    iteration += 1
-  }
-  return iteration
-}
 app.checkNeighbors = function(arr){
-  let newState = []
   for (var i = 0; i < arr.length; i++) {
-    newState.push([])
     for (var j = 0; j < arr[i].length; j++) {
       arr[i][j].livingNeighbors = 0
       check(arr[i][j], arr,0,1)
@@ -72,9 +59,19 @@ function check(cell,map,xChange,yChange){
   }
 }
 
-app.checkStatus = function(map){
+
+app.checkStatusAndPopulate = function(map){
+  main.innerHTML = ''
   for (var i = 0; i < map.length; i++) {
+    var row = document.createElement('div')
+    row.setAttribute('class', 'row')
     for (var j = 0; j < map.length; j++) {
+      var div = document.createElement('div')
+      div.onclick = function(){
+        resetMap(this.id)
+      }
+      div.setAttribute('id', i+'.'+j)
+      div.setAttribute('class','inner')
       let cell = map[i][j]
       if(cell.status){
         if(cell.livingNeighbors >3 ||cell.livingNeighbors<2){
@@ -85,7 +82,12 @@ app.checkStatus = function(map){
           cell.status = true
         }
       }
+      if(cell.status){
+        div.style.backgroundColor = "blue"
+      }
+      row.appendChild(div)
     }
+    main.appendChild(row)
   }
 }
 
@@ -114,17 +116,13 @@ function resetMap(id){
   var arr = id.split('.')
   var i = arr[0]
   var j = arr[1]
-  console.log(currentMap[i][j].status);
-
   currentMap[i][j].status = !currentMap[i][j].status
-  console.log(currentMap[i][j].status);
   populate()
 }
 
 function iterate(){
   app.checkNeighbors(currentMap)
-  app.checkStatus(currentMap)
-  populate()
+  app.checkStatusAndPopulate(currentMap)
 }
 
 var main = document.getElementById('main')
@@ -140,7 +138,8 @@ var currentMap = map.getMap()
 var nIntervId;
 
 function go(){
-  nIntervId = setInterval(iterate,250)
+  clearInterval(nIntervId);
+  nIntervId = setInterval(iterate,500)
 }
 
 randomButton.onclick = function(){
