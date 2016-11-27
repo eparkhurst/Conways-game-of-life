@@ -12,7 +12,9 @@ app.generate = function(size){
     }
   }
 }
+
 app.checkNeighbors = function(map){
+  console.log(map);
   var minX= Math.min(parseInt(Object.keys(map)))
   var xLength = Object.keys(map).length
   for (var i = minX; i < xLength; i++) {
@@ -94,16 +96,27 @@ app.populate = function(map){
     main.appendChild(row)
   }
 }
+
+app.generate(4)
+app.map[0][1].status = true
+app.map[1][1].status = true
+app.map[1][2].status = true
+
 app.run = function(map){
   app.checkNeighbors(map)
   app.update(map)
   app.populate(map)
 }
 
-app.generate(3)
-app.map[0][1].status = true
-app.map[1][1].status = true
-app.map[1][2].status = true
-app.checkNeighbors(app.map)
-app.update(app.map)
-app.populate(app.map)
+var nIntervId;
+
+function go(map){
+  console.log(map);
+  clearInterval(nIntervId);
+  nIntervId = setInterval(app.run(map),500)
+}
+
+go(app.map)
+// app.checkNeighbors(app.map)
+// app.update(app.map)
+// app.populate(app.map)
